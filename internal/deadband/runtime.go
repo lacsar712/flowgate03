@@ -21,7 +21,11 @@ func CopyEUWindow(samples []float64, n int) []float64 {
 	if n > len(samples) {
 		n = len(samples)
 	}
-	return samples[:n]
+	// Allocate an independent backing array so callers can mutate the
+	// returned window without polluting the node's EU source slice.
+	out := make([]float64, n)
+	copy(out, samples[:n])
+	return out
 }
 
 type NodeBag struct {
